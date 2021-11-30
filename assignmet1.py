@@ -18,8 +18,10 @@ if not os.path.exists(data_filepath):
 l_csv_file = open(data_filepath)
 csv_reader = csv.DictReader(l_csv_file, delimiter=';')
 
-# Get the field names from csv
-csv_fieldnames = csv_reader.fieldnames
+# Get the field names from csv in lowercase
+csv_fieldnames = list()
+for i_fldname in csv_reader.fieldnames:
+    csv_fieldnames.append(i_fldname.lower())
 
 
 
