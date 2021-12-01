@@ -67,7 +67,7 @@ for i_record in csv_reader:
 
 
 ############# Task 2  ############
-
+from datetime import datetime
 # 2.1
 def get_roadside_by_date(creation_date):
     '''
@@ -76,7 +76,7 @@ def get_roadside_by_date(creation_date):
     :param creation_date: String format
     :return: String with possible values : 'N/W' , 'S/E', 'Invalid'
     '''
-    from datetime import datetime
+    
     NW_dates = (13, 14, 23)
     SE_dates = (20, 21, 22)
     try:
@@ -109,7 +109,7 @@ def get_roadside_by_coord(tree_coord, center_coord):
                    tree_coord[1] - center_coord[1]]     # difference between coordinates to determine the position
 
     if diff_vector[0] < diff_vector[1]:
-        return 'N/W'    #difference in latitudes is less than longitudes
+        return 'N/W'    #difference in longitudes is less than latitudes
     else:
         return 'S/E'
 
@@ -126,8 +126,8 @@ trees_positioned_at_wrong_side_of_road = []
 
 for i_key,j_val in survey_data_dict.items():
     l_checkdate = j_val['creationdate']
-    l_tree_coord = [j_val['treelatitude'],j_val['treelongitude']]         # List of tree coordinates from data
-    l_center_coord = [j_val['centerlatitude'],j_val['centerlongitude']]   # List of center coordinates from data
+    l_tree_coord = [j_val['treelongitude'],j_val['treelatitude']]         # List of tree coordinates from data
+    l_center_coord = [j_val['centerlongitude'],j_val['centerlatitude']]   # List of center coordinates from data
     # 3.1 Getting roadside by date value by passing date to the method below
     j_val['roadsidebydate'] = get_roadside_by_date(l_checkdate)
     # 3.2 Getting roadside by coordinate value by passing tree coordinates and center coordintaes to the method below
