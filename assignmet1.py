@@ -121,6 +121,13 @@ def get_roadside_by_coord(tree_coord, center_coord):
 
 # # 3.1, 3.2. 3.3
 
+# 3.1 
+for val in survey_data_dict.values():
+    for item in val.items():
+        if item[0] == 'creationdate':
+            checkdate = item[1]
+    val['roadsidebydate'] = get_roadside_by_date(checkdate)
+
 
 # # list of objectids for trees with false positions
 
