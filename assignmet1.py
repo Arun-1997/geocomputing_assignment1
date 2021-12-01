@@ -4,6 +4,12 @@ import csv
 from datetime import datetime
 import math
 
+try:
+    import numpy as np
+    import matplotlib.pyplot as plt
+except ModuleNotFoundError:
+    print("Modules Numpy or matplotlib are not installed. Kindly check and install.")
+
 # 1.1
 
 # Relative Path of the data file
@@ -210,21 +216,43 @@ finally:
 # ############# Task 5  ############
 
 # # 5.1, 5.2
-# matrix = np.loadtxt()
+
+
+matrix = np.loadtxt(data_filepath,delimiter=';',skiprows=1,usecols = (0,2,3))
+
 
 # # 5.3
-# indx_of_beech = matrix[:, 1] == 1
-# indx_of_oak = matrix[:, 1] == 0
+indx_of_beech = matrix[:, 1] == 1
+indx_of_oak = matrix[:, 1] == 0
 
-# beech_diameter = matrix
-# oak_diameter = matrix
+
+beech_diameter = matrix[indx_of_beech,2]
+oak_diameter = matrix[indx_of_oak,2]
+
 
 # # 5.4
-# print("Beech tree statistics")
-# print("N : ", , ",  Minimum : ", , " , Maximum : ", , " , Mean : ", )
-# print("Oak tree statistics")
-# print("N : ", , ",  Minimum : ", , " , Maximum : ", , " , Mean : ", )
+print("Beech tree statistics")
+print("N : ", len(beech_diameter), ",  Minimum : ",np.min(beech_diameter) , " , Maximum : ",np.max(beech_diameter) , " , Mean : ",np.mean(beech_diameter))
+print("Oak tree statistics")
+print("N : ", len(oak_diameter), ",  Minimum : ",np.min(oak_diameter) , " , Maximum : ",np.max(oak_diameter) , " , Mean : ",np.mean(oak_diameter))
+
 
 
 # # 5.5
 
+# Plot the subplot 1 by 2. Row 1 and column 1 here
+plt.subplot(1,2,1)
+
+# Histogram for beech  tree diameter
+plt.hist(beech_diameter,bins=10,color='brown')
+plt.xlabel('Tree Diameter') # X and Y labels for Tree Diameter and count
+plt.ylabel('Count')
+plt.title('Beech Tree diameters') # Title for beech tree diameters
+plt.subplot(1,2,2)
+
+# Histogram for oak tree diameter
+plt.hist(oak_diameter,bins=10,color='brown')
+plt.xlabel('Tree Diameter')
+plt.ylabel('Count')
+plt.title('Oak Tree diameters') # Title for beech tree diameters
+plt.show()
