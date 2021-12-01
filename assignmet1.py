@@ -5,11 +5,11 @@ import csv
 # 1.1
 
 # Relative Path of the data file
-data_filepath = "data/surveyed_trees.csv"
+data_filepath = 'data/surveyed_trees.csv'
 
 
 if not os.path.exists(data_filepath):
-    raise FileNotFoundError("File not found in this path :" + os.path.abspath(data_filepath))
+    raise FileNotFoundError('File not found in this path :' + os.path.abspath(data_filepath))
 
 
 # 1.2
@@ -91,7 +91,7 @@ def get_roadside_by_date(creation_date):
     except ValueError:
         output = 'Invalid'          #If the date format is incorrect
         return output
-    pass
+    
 
 
 # 2.2
@@ -109,9 +109,9 @@ def get_roadside_by_coord(tree_coord, center_coord):
                    tree_coord[1] - center_coord[1]]     # difference between coordinates to determine the position
 
     if diff_vector[0] < diff_vector[1]:
-        return "N/W"    #difference in latitudes is less than longitudes
+        return 'N/W'    #difference in latitudes is less than longitudes
     else:
-        return "S/E"
+        return 'S/E'
 
 
 # 2.3
@@ -119,20 +119,29 @@ def get_roadside_by_coord(tree_coord, center_coord):
 
 # ############# Task 3  ############
 
-# # 3.1, 3.2. 3.3
-
-# 3.1 
-for val in survey_data_dict.values():
-    for item in val.items():
-        if item[0] == 'creationdate':
-            checkdate = item[1]
-    val['roadsidebydate'] = get_roadside_by_date(checkdate)
 
 
-# # list of objectids for trees with false positions
+trees_positioned_at_wrong_side_of_road = []
 
-# # 3.4
-# trees_positioned_at_wrong_side_of_road = []
+
+for i_key,j_val in survey_data_dict.items():
+    l_checkdate = j_val['creationdate']
+    l_tree_coord = [j_val['treelatitude'],j_val['treelongitude']]         # List of tree coordinates from data
+    l_center_coord = [j_val['centerlatitude'],j_val['centerlongitude']]   # List of center coordinates from data
+    # 3.1 Getting roadside by date value by passing date to the method below
+    j_val['roadsidebydate'] = get_roadside_by_date(l_checkdate)
+    # 3.2 Getting roadside by coordinate value by passing tree coordinates and center coordintaes to the method below
+    j_val['roadsidebycoord'] = get_roadside_by_coord(l_tree_coord,l_center_coord)
+    # 3.3 Comparing roadsidebydate and roadsidebycoord and assigning it to a boolean value
+    l_bool = (j_val['roadsidebydate'] == j_val['roadsidebycoord'])
+    j_val['isatcorrectsideofroad'] = l_bool
+    # 3.4 list of objectids for trees with false positions
+    if not l_bool:
+        trees_positioned_at_wrong_side_of_road.append(i_key)
+
+print(f'The count for trees that are positioned at the wrong side of the road : {len(trees_positioned_at_wrong_side_of_road)}')
+
+
 
 
 # ############# Task 4  ############
