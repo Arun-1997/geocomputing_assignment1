@@ -70,6 +70,27 @@ for i_record in csv_reader:
 
 # 2.1
 def get_roadside_by_date(creation_date):
+    '''
+    :created date: December 1, 2021
+    :purpose: This function determines the roadside using the survey date of the trees
+    :param creation_date: String format
+    :return: String with possible values : 'N/W' , 'S/E', 'Invalid'
+    '''
+    from datetime import datetime
+    NW_dates = (13, 14, 23)
+    SE_dates = (20, 21, 22)
+    try:
+        date_time_obj = datetime.strptime(creation_date, '%m/%d/%Y %H:%M')    #checking the format of datetime and returning it as an object
+        creation_day = date_time_obj.day    #extracting the day
+        output = 'None'
+        if creation_day in NW_dates:        #checking if it belongs to N/W data collection
+            output = 'N/W'
+        elif creation_day in SE_dates:      #checking if it belongs to S/E data collection
+            output = 'S/E'
+        return output
+    except ValueError:
+        output = 'Invalid'          #If the date format is incorrect
+        return output
     pass
 
 
@@ -77,11 +98,18 @@ def get_roadside_by_date(creation_date):
 
 
 def get_roadside_by_coord(tree_coord, center_coord):
+    '''
+    :created date: December 1, 2021
+    :purpose: This function determines the roadside using the difference in coordinates.
+    :param tree_coord: Coordinates of the false tree location as a list or tuple
+    :param center_coord: Coordinates of the position on the centerline nearest to the false tree location
+    :return: String with possible values : 'N/W' , 'S/E'
+    '''
     diff_vector = [tree_coord[0] - center_coord[0],
-                   tree_coord[1] - center_coord[1]]
+                   tree_coord[1] - center_coord[1]]     # difference between coordinates to determine the position
 
     if diff_vector[0] < diff_vector[1]:
-        return "N/W"
+        return "N/W"    #difference in latitudes is less than longitudes
     else:
         return "S/E"
 
