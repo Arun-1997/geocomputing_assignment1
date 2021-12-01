@@ -217,20 +217,26 @@ finally:
 
 # # 5.1, 5.2
 
-
-matrix = np.loadtxt(data_filepath,delimiter=';',skiprows=1,usecols = (0,2,3))
+# Loading the data csv as matrix with columns. Getting the column index from the data file
+col_index = tuple([csv_fieldnames.index('objectid'),csv_fieldnames.index('species'),csv_fieldnames.index('dbh')])
+matrix = np.loadtxt(data_filepath,delimiter=';',skiprows=1,usecols = col_index)
 
 
 # # 5.3
+# Getting beech species as True
 indx_of_beech = matrix[:, 1] == 1
+# Getting oak species as False
 indx_of_oak = matrix[:, 1] == 0
 
-
+# Getting list of Diameter at breast height (dbh) for beech 
 beech_diameter = matrix[indx_of_beech,2]
+# Getting list of Diameter at breast height (dbh) for oak
 oak_diameter = matrix[indx_of_oak,2]
 
 
 # # 5.4
+# Printing the statistics of beech and oak trees diameters
+
 print("Beech tree statistics")
 print("N : ", len(beech_diameter), ",  Minimum : ",np.min(beech_diameter) , " , Maximum : ",np.max(beech_diameter) , " , Mean : ",np.mean(beech_diameter))
 print("Oak tree statistics")
