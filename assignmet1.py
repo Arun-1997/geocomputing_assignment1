@@ -69,8 +69,8 @@ for i_record in csv_reader:
             l_temp_dict[l_field_name] = l_convert_to_type(i_record[l_field_name])
 
     survey_data_dict[l_objid] = l_temp_dict 
-
-
+# Close the csv file
+l_csv_file.close()
 # print(survey_data_dict)
 
 
@@ -225,7 +225,7 @@ matrix = np.loadtxt(data_filepath,delimiter=';',skiprows=1,usecols = col_index)
 # # 5.3
 # Getting beech species as True
 indx_of_beech = matrix[:, 1] == 1
-# Getting oak species as False
+# Getting oak species as True
 indx_of_oak = matrix[:, 1] == 0
 
 # Getting list of Diameter at breast height (dbh) for beech 
@@ -251,14 +251,14 @@ plt.subplot(1,2,1)
 
 # Histogram for beech  tree diameter
 plt.hist(beech_diameter,bins=10,color='brown')
-plt.xlabel('Tree Diameter') # X and Y labels for Tree Diameter and count
+plt.xlabel('Tree Diameter (dbh)') # X and Y labels for Tree Diameter and count
 plt.ylabel('Count')
 plt.title('Beech Tree diameters') # Title for beech tree diameters
 plt.subplot(1,2,2)
 
 # Histogram for oak tree diameter
 plt.hist(oak_diameter,bins=10,color='brown')
-plt.xlabel('Tree Diameter')
+plt.xlabel('Tree Diameter (dbh)')
 plt.ylabel('Count')
 plt.title('Oak Tree diameters') # Title for beech tree diameters
 plt.show()
