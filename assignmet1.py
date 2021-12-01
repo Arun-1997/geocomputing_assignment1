@@ -1,6 +1,8 @@
 ############# Task 1  ############
 import os,sys
 import csv
+from datetime import datetime
+import math
 
 # 1.1
 
@@ -67,7 +69,6 @@ for i_record in csv_reader:
 
 
 ############# Task 2  ############
-from datetime import datetime
 # 2.1
 def get_roadside_by_date(creation_date):
     '''
@@ -144,47 +145,67 @@ print(f'The count for trees that are positioned at the wrong side of the road : 
 
 
 
-# ############# Task 4  ############
-# # 4.1
+############# Task 4  ############
+# 4.1
 
-# def st_translate(current_tree_coord, displacement, angle):
-#     x = current_tree_coord[0]
-#     y = current_tree_coord[1]
-#     x += displacement * math.cos(angle)
-#     y += displacement * math.sin(angle)
-#     return [x, y]
-
-
-# # 4.2, 4.3, 4.4
-
-# for objectid, item in survey_data_dict:
-#     tree_coord = [item["treelongitude"], item["treelatitude"]]
-
-#     diff_vector = []
-
-#     tree_angle = math.atan2(diff_vector[1], diff_vector[0])
-
-#     displacement = 2.0 + 3.25 * item["dbh"]/200
-
-#     if not item["isatcorrectsideofroad"]:
-#         displacement = -displacement
-
-#     true_tree_coord = st_translate()
+def st_translate(current_tree_coord, displacement, angle):
+    '''
+    :purpose Convert false tree coordinates to true tree coordinates
+    :param current_tree_coord: False tree coordinates recorded during the survey
+    :param displacement: displacement between the tree and the position where coordinates were calculated
+    :param angle: angle between the road and the tree
+    :return: true coordinates of the tree
+    '''
+    x = current_tree_coord[0]
+    y = current_tree_coord[1]
+    x += displacement * math.cos(angle)           #Calculating the true longitude
+    y += displacement * math.sin(angle)           #Calculating the true latitude
+    return [x, y]
 
 
+# 4.2, 4.3, 4.4
 
-# # 4.5
+for objectid, item in survey_data_dict.items():
+    tree_coord = [item["treelongitude"], item["treelatitude"]]
+    center_coord = [item["centerlongitude"], item["centerlatitude"]]
 
-# try:
-#     labels = ['objectid'] + list(survey_data_dict[1].keys())
-#     with open('trees_true_positions.csv', 'r') as f_out:
-#         writer = csv.DictReader(f_out, fieldnames=labels)
-#         writer.writeheader()
-#         for objectid, elem in survey_data_dict.items():
+    diff_vector = [tree_coord[0] - center_coord[0],
+                    tree_coord[1] - center_coord[1]]            # difference between coordinates to determine the angle between centre location and tree location used for calculation
+
+    tree_angle = math.atan2(diff_vector[1], diff_vector[0])
+
+    displacement = 2.0 + 3.25 * item["dbh"]/200             # distance between the survey point and the centre of tree
+                                                            # 2 m - telescopic pole length, 32.5 cm - pole segment length, dbh - diameter at breast height in 1/10 of segment
+
+    if not item["isatcorrectsideofroad"]:           #Changing the displacement sign if the survey shows wrong side of the tree location
+        displacement = -displacement
+
+    true_tree_coord = st_translate(tree_coord, displacement, tree_angle)    #calling the translate function to retreive the true coordinates
+
+    item['truetreelongitude'] = true_tree_coord[0]          #updating the survey data dictionary with true coordinates
+    item['truetreelatitude'] = true_tree_coord[1]
 
 
-# except IOError:
-#     print("I/O error")
+
+# 4.5
+#Writing the survey data into a csv file
+
+try:
+    labels = ['objectid'] + list(survey_data_dict[1].keys())        # extracting the header information
+    with open('trees_true_positions.csv', 'w' , newline='') as f_out:       #creating a new csv file and writing the survey data
+        writer = csv.DictWriter(f_out, fieldnames=labels)
+        writer.writeheader()
+        for objectid, elem in survey_data_dict.items():
+            elem['objectid'] = objectid
+            writer.writerow(elem)
+
+
+
+except IOError:
+    print("I/O error")
+
+finally:
+    f_out.close()
 
 # ############# Task 5  ############
 
