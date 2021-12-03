@@ -122,6 +122,11 @@ def get_roadside_by_coord(tree_coord, center_coord):
 
 
 # 2.3
+#Testing of the two functions created in Task 2
+print('Test 1 for Function 1 with input date : 11/13/2021 12:43 - ' , get_roadside_by_date('11/13/2021 12:43'))
+print('Test 2 for Function 1 with input date : 2021/11/13 12:43 - ', get_roadside_by_date('2021/11/13 12:43'))
+print('Test 1 for Function 2 with input coordinates : [0,0] , [10, -10] - ', get_roadside_by_coord([0,0] ,[ 10, -10]))
+print('Test 2 for Function 2 with input coordinates : [0,0] , [-10, 10] - ', get_roadside_by_coord([0,0],[ -10, 10]))
 
 
 # ############# Task 3  ############
@@ -260,5 +265,5 @@ plt.subplot(1,2,2)
 plt.hist(oak_diameter,bins=10,color='brown')
 plt.xlabel('Tree Diameter (dbh)')
 plt.ylabel('Count')
-plt.title('Oak Tree diameters') # Title for beech tree diameters
+plt.title('Oak Tree diameters') # Title for oak tree diameters
 plt.show()
