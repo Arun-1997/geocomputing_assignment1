@@ -145,6 +145,7 @@ print('Test 2 for Function 2 with input coordinates : [0,0] , [-10, 10] - ', get
 ############# Task 3  ############
 
 trees_positioned_at_wrong_side_of_road = []
+trees_with_false_positions = []
 
 for i_key, j_val in survey_data_dict.items():
     l_checkdate = j_val['creationdate']
@@ -162,9 +163,12 @@ for i_key, j_val in survey_data_dict.items():
     j_val['isatcorrectsideofroad'] = l_bool
 
     # 3.4 list of objectids for trees with false positions
+    trees_with_false_positions.append(i_key)
+    # 3.4 list of objectids for trees positioned at the wrong side of the road
     if not l_bool:
         trees_positioned_at_wrong_side_of_road.append(i_key)
-
+print(
+    f'The count for trees with false positions : {len(trees_with_false_positions)}')
 print(
     f'The count for trees that are positioned at the wrong side of the road : {len(trees_positioned_at_wrong_side_of_road)}')
 
@@ -190,7 +194,10 @@ def st_translate(current_tree_coord, displacement, angle):
 
 # 4.2, 4.3, 4.4
 
-for objectid, item in survey_data_dict.items():
+# Looping over the list of objectids with trees that has false positions.
+# As mentioned in the project description, all tree coordinates were collected at false positions
+for objectid in trees_with_false_positions:
+    item = survey_data_dict[objectid]
     tree_coord = [item["treelongitude"], item["treelatitude"]]
     center_coord = [item["centerlongitude"], item["centerlatitude"]]
 
@@ -205,7 +212,7 @@ for objectid, item in survey_data_dict.items():
     # 2 m - telescopic pole length, 32.5 cm - pole segment length, dbh - diameter at breast height in 1/10 of segment
 
     # Changing the displacement sign if the survey shows wrong side of the tree location
-    if not item["isatcorrectsideofroad"]:
+    if not item['isatcorrectsideofroad']:
         displacement = -displacement
 
     # calling the translate function to retrieve the true coordinates
